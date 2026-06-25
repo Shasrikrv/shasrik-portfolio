@@ -284,7 +284,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="#" className="font-display font-bold text-sm tracking-[0.18em] text-white select-none">
             <span className="neon-cyan">&lt;</span>
-            {" "}SHASRIK_REDDY{" "}
+            {" "}SHASRIK REDDY VEERLAPALLY{" "}
             <span className="neon-cyan">/&gt;</span>
           </a>
 
