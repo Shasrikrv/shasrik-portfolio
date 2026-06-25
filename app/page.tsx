@@ -4,86 +4,72 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import {
   ArrowUpRight, Github, Linkedin, Mail,
-  Code2, Brain, Server, Database, ShieldCheck,
-  Terminal, Zap, Globe, ChevronRight, Cpu,
+  Terminal, ChevronRight, MapPin, Calendar,
+  ExternalLink, GraduationCap, User, Target, Lightbulb,
+  BookOpen, Send, Code2,
 } from "lucide-react";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const projects = [
   {
-    id: "001",
     title: "AI Shopping Agent",
     link: "https://ai-shopping-agent-iota.vercel.app/login",
+    github: "https://github.com/Shasrikrv",
     stack: ["Next.js", "TypeScript", "Claude API", "Tailwind", "Vercel"],
     desc: "Multi-agent AI shopping assistant that fetches, filters, ranks, and explains product recommendations from natural-language queries.",
-    bullets: ["AI filter, ranking & explanation agents", "Prompt caching and cost optimization", "Password-protected Vercel deployment"],
-    power: 92,
+    bullets: [
+      "AI filter, ranking & explanation agents",
+      "Prompt caching and cost optimization",
+      "Password-protected Vercel deployment",
+    ],
   },
   {
-    id: "002",
     title: "FoodieHub",
     link: "https://foodiehub-eight-snowy.vercel.app/",
+    github: "https://github.com/Shasrikrv",
     stack: ["Next.js", "PostgreSQL", "Supabase", "NextAuth", "Claude", "Cloudinary"],
     desc: "Full-stack social food platform with authentication, recipe sharing, media uploads, notifications, chat, and AI recipe suggestions.",
-    bullets: ["AI recipe generation from image/text prompts", "JWT, Google OAuth, bcrypt auth", "Cloudinary media + Supabase DB"],
-    power: 95,
+    bullets: [
+      "AI recipe generation from image/text prompts",
+      "JWT, Google OAuth, bcrypt auth",
+      "Cloudinary media + Supabase DB",
+    ],
   },
 ];
 
-const skillGroups = [
+type Color = "blue" | "violet" | "emerald" | "orange" | "pink";
+
+const skillCategories: { label: string; color: Color; items: string[] }[] = [
   {
-    category: "LANGUAGES",
-    colorText: "text-cyan-400",
-    colorBar: "from-cyan-500 to-cyan-300",
-    colorGlow: "rgba(34,211,238,0.55)",
-    skills: [
-      { name: "TypeScript / JavaScript", level: 92 },
-      { name: "Python", level: 85 },
-      { name: "Java", level: 80 },
-      { name: "SQL", level: 88 },
-    ],
+    label: "Languages",
+    color: "blue",
+    items: ["TypeScript", "JavaScript", "Python", "Java", "SQL"],
   },
   {
-    category: "FRONTEND",
-    colorText: "text-violet-400",
-    colorBar: "from-violet-500 to-violet-300",
-    colorGlow: "rgba(167,139,250,0.55)",
-    skills: [
-      { name: "React.js / Next.js", level: 94 },
-      { name: "Tailwind CSS", level: 90 },
-      { name: "Redux", level: 82 },
-      { name: "HTML5 / CSS3", level: 95 },
-    ],
+    label: "Frontend",
+    color: "violet",
+    items: ["React.js", "Next.js", "Tailwind CSS", "Redux", "HTML5", "CSS3"],
   },
   {
-    category: "BACKEND",
-    colorText: "text-emerald-400",
-    colorBar: "from-emerald-500 to-emerald-300",
-    colorGlow: "rgba(52,211,153,0.55)",
-    skills: [
-      { name: "Node.js / Express.js", level: 88 },
-      { name: "REST APIs", level: 92 },
-      { name: "Spring Boot", level: 75 },
-    ],
+    label: "Backend",
+    color: "emerald",
+    items: ["Node.js", "Express.js", "Spring Boot", "REST APIs"],
   },
   {
-    category: "AI & CLOUD",
-    colorText: "text-orange-400",
-    colorBar: "from-orange-500 to-orange-300",
-    colorGlow: "rgba(251,146,60,0.55)",
-    skills: [
-      { name: "Anthropic Claude API", level: 90 },
-      { name: "AI Agents & Prompt Eng.", level: 87 },
-      { name: "Vercel / Cloudinary", level: 85 },
-      { name: "PostgreSQL / MongoDB", level: 86 },
-    ],
+    label: "Database",
+    color: "orange",
+    items: ["PostgreSQL", "MongoDB", "MySQL", "Supabase"],
+  },
+  {
+    label: "AI & Cloud",
+    color: "pink",
+    items: ["Claude API", "AI Agents", "Prompt Engineering", "Vercel", "Cloudinary", "Git"],
   },
 ];
 
 const experience = [
   {
-    idx: "03",
     role: "Full Stack Developer",
     company: "Zentrix IT Solutions",
     location: "Charlotte, NC · Remote",
@@ -96,7 +82,6 @@ const experience = [
     ],
   },
   {
-    idx: "02",
     role: "UI/UX Engineer",
     company: "Invent Artificial LLC",
     location: "Irving, TX · Remote",
@@ -109,7 +94,6 @@ const experience = [
     ],
   },
   {
-    idx: "01",
     role: "Software Engineer",
     company: "Varma Soft Solutions",
     location: "Hyderabad, India",
@@ -123,30 +107,83 @@ const experience = [
   },
 ];
 
-const heroStats = [
-  { label: "YRS EXP",      value: 4,   suffix: "+" },
-  { label: "PROJECTS",     value: 12,  suffix: "+" },
-  { label: "TECHNOLOGIES", value: 20,  suffix: "+" },
-  { label: "COMMITS",      value: 500, suffix: "+" },
+const aboutCards: { icon: React.ElementType; title: string; color: Color; items: string[] }[] = [
+  {
+    icon: User,
+    title: "Who I Am",
+    color: "blue",
+    items: ["AI Software Engineer", "Full Stack Developer", "Problem Solver & Innovator"],
+  },
+  {
+    icon: Code2,
+    title: "What I Do",
+    color: "violet",
+    items: ["Build production-ready web apps", "Integrate AI & LLM workflows", "Design scalable APIs & systems"],
+  },
+  {
+    icon: Target,
+    title: "My Goals",
+    color: "emerald",
+    items: ["Build impactful AI products", "Solve real-world problems", "Continuously learn & grow"],
+  },
+  {
+    icon: Lightbulb,
+    title: "My Philosophy",
+    color: "orange",
+    items: ["Clean, maintainable code", "User-first design thinking", "Ship fast, iterate often"],
+  },
 ];
 
-const heroSkills = [
-  [Brain,       "AI Agents"],
-  [Code2,       "React/Next"],
-  [Server,      "Node.js"],
-  [Database,    "SQL/NoSQL"],
-  [ShieldCheck, "Auth"],
-  [Globe,       "Cloud Deploy"],
-] as const;
+const heroStats = [
+  { label: "Years Exp",    value: 4,   suffix: "+" },
+  { label: "Projects",     value: 12,  suffix: "+" },
+  { label: "Technologies", value: 20,  suffix: "+" },
+  { label: "Commits",      value: 500, suffix: "+" },
+];
+
+// ─── Color map ───────────────────────────────────────────────────────────────
+
+const colorMap: Record<Color, { badge: string; dot: string; card: string; icon: string }> = {
+  blue: {
+    badge: "bg-blue-500/[0.1] text-blue-400 border-blue-500/20",
+    dot:   "bg-blue-500",
+    card:  "border-blue-500/25 bg-blue-500/[0.04]",
+    icon:  "text-blue-400 bg-blue-500/[0.1]",
+  },
+  violet: {
+    badge: "bg-violet-500/[0.1] text-violet-400 border-violet-500/20",
+    dot:   "bg-violet-500",
+    card:  "border-violet-500/25 bg-violet-500/[0.04]",
+    icon:  "text-violet-400 bg-violet-500/[0.1]",
+  },
+  emerald: {
+    badge: "bg-emerald-500/[0.1] text-emerald-400 border-emerald-500/20",
+    dot:   "bg-emerald-500",
+    card:  "border-emerald-500/25 bg-emerald-500/[0.04]",
+    icon:  "text-emerald-400 bg-emerald-500/[0.1]",
+  },
+  orange: {
+    badge: "bg-orange-500/[0.1] text-orange-400 border-orange-500/20",
+    dot:   "bg-orange-500",
+    card:  "border-orange-500/25 bg-orange-500/[0.04]",
+    icon:  "text-orange-400 bg-orange-500/[0.1]",
+  },
+  pink: {
+    badge: "bg-pink-500/[0.1] text-pink-400 border-pink-500/20",
+    dot:   "bg-pink-500",
+    card:  "border-pink-500/25 bg-pink-500/[0.04]",
+    icon:  "text-pink-400 bg-pink-500/[0.1]",
+  },
+};
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
 function useTyping(texts: string[], speed = 75) {
-  const [display, setDisplay]     = useState("");
-  const [tIdx, setTIdx]           = useState(0);
-  const [cIdx, setCIdx]           = useState(0);
-  const [deleting, setDeleting]   = useState(false);
-  const [paused, setPaused]       = useState(false);
+  const [display, setDisplay]   = useState("");
+  const [tIdx, setTIdx]         = useState(0);
+  const [cIdx, setCIdx]         = useState(0);
+  const [deleting, setDeleting] = useState(false);
+  const [paused, setPaused]     = useState(false);
 
   useEffect(() => {
     if (paused) return;
@@ -156,7 +193,7 @@ function useTyping(texts: string[], speed = 75) {
       if (!deleting) {
         if (cIdx < cur.length) {
           setDisplay(cur.slice(0, cIdx + 1));
-          setCIdx(n => n + 1);
+          setCIdx((n) => n + 1);
         } else {
           setPaused(true);
           setTimeout(() => { setPaused(false); setDeleting(true); }, 2000);
@@ -164,10 +201,10 @@ function useTyping(texts: string[], speed = 75) {
       } else {
         if (cIdx > 0) {
           setDisplay(cur.slice(0, cIdx - 1));
-          setCIdx(n => n - 1);
+          setCIdx((n) => n - 1);
         } else {
           setDeleting(false);
-          setTIdx(n => (n + 1) % texts.length);
+          setTIdx((n) => (n + 1) % texts.length);
         }
       }
     }, delay);
@@ -179,28 +216,17 @@ function useTyping(texts: string[], speed = 75) {
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
-function HUDCorners() {
-  return (
-    <>
-      <span className="hud-corner tl" />
-      <span className="hud-corner tr" />
-      <span className="hud-corner bl" />
-      <span className="hud-corner br" />
-    </>
-  );
-}
-
 function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
+  const ref    = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true });
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (!inView) return;
     const steps = 50;
-    const inc = value / steps;
-    let cur = 0;
-    const id = setInterval(() => {
+    const inc   = value / steps;
+    let cur     = 0;
+    const id    = setInterval(() => {
       cur += inc;
       if (cur >= value) { setCount(value); clearInterval(id); }
       else setCount(Math.floor(cur));
@@ -211,52 +237,31 @@ function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-function SkillBar({
-  name, level, colorBar, colorGlow,
-}: { name: string; level: number; colorBar: string; colorGlow: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
-  return (
-    <div ref={ref} className="mb-4">
-      <div className="flex justify-between mb-1.5">
-        <span className="text-xs font-mono text-gray-500 tracking-wider">{name}</span>
-        <span className="text-xs font-mono text-cyan-400/80">{level}%</span>
-      </div>
-      <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
-        <motion.div
-          className={`h-full rounded-full bg-gradient-to-r ${colorBar}`}
-          style={{ boxShadow: `0 0 8px ${colorGlow}` }}
-          initial={{ width: 0 }}
-          animate={inView ? { width: `${level}%` } : { width: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-        />
-      </div>
-    </div>
-  );
-}
-
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  show:   { opacity: 1, y: 0, transition: { duration: 0.55 } },
+  hidden: { opacity: 0, y: 30 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 const stagger = {
   hidden: {},
   show:   { transition: { staggerChildren: 0.1 } },
 };
 
-function SectionHeader({ index, title }: { index: string; title: string }) {
+function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <motion.div
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: "-80px" }}
       variants={fadeUp}
-      className="flex items-center gap-4 mb-10"
+      className="text-center mb-14"
     >
-      <span className="text-xs font-mono text-white/10 select-none">{index}</span>
-      <span className="h-px flex-1 bg-white/[0.06]" />
-      <h2 className="font-display text-2xl md:text-3xl font-black tracking-widest gradient-text">{title}</h2>
-      <span className="h-px flex-1 bg-white/[0.06]" />
+      <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">{title}</h2>
+      <p className="text-slate-400 text-sm max-w-md mx-auto">{subtitle}</p>
+      <div className="mt-4 flex items-center justify-center gap-3">
+        <span className="h-px w-12 bg-blue-500/40" />
+        <span className="w-2 h-2 rounded-full bg-blue-500" />
+        <span className="h-px w-12 bg-blue-500/40" />
+      </div>
     </motion.div>
   );
 }
@@ -272,371 +277,563 @@ export default function Home() {
   ]);
 
   return (
-    <main className="min-h-screen bg-game-bg text-white overflow-x-hidden font-sans">
-      {/* Backgrounds */}
-      <div className="fixed inset-0 grid-bg pointer-events-none z-0" />
-      <div className="scanlines fixed inset-0 pointer-events-none z-10" />
-      <div className="fixed -left-64 top-10 w-[700px] h-[700px] rounded-full bg-cyan-500/[0.04] blur-[160px] pointer-events-none z-0" />
-      <div className="fixed -right-64 top-[500px] w-[600px] h-[600px] rounded-full bg-violet-600/[0.06] blur-[160px] pointer-events-none z-0" />
+    <main className="min-h-screen bg-[#070d1e] text-white overflow-x-hidden">
+
+      {/* Ambient background orbs */}
+      <div className="fixed -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-blue-600/[0.08] blur-[130px] pointer-events-none z-0" />
+      <div className="fixed top-1/2 -right-40 w-[400px] h-[400px] rounded-full bg-violet-600/[0.07] blur-[120px] pointer-events-none z-0" />
+      <div className="fixed bottom-0 left-1/3 w-[350px] h-[350px] rounded-full bg-cyan-500/[0.05] blur-[100px] pointer-events-none z-0" />
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.06] bg-game-bg/85 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <a href="#" className="font-display font-bold text-sm tracking-[0.18em] text-white select-none">
-            <span className="neon-cyan">&lt;</span>
-            {" "}SHASRIK REDDY VEERLAPALLY{" "}
-            <span className="neon-cyan">/&gt;</span>
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.06] bg-[#070d1e]/85 backdrop-blur-xl">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="#" className="font-bold text-white text-sm tracking-wide">
+            &lt;<span className="text-blue-400">Shasrik</span> /&gt;
           </a>
 
-          <div className="hidden md:flex items-center gap-1">
-            {["ABOUT", "EXPERIENCE", "PROJECTS", "SKILLS", "CONTACT"].map(s => (
+          <div className="hidden md:flex items-center gap-7">
+            {["About", "Experience", "Projects", "Skills", "Contact"].map((s) => (
               <a
                 key={s}
                 href={`#${s.toLowerCase()}`}
-                className="px-3 py-1.5 text-[11px] font-mono text-gray-500 hover:text-cyan-400 tracking-widest rounded hover:bg-cyan-500/[0.06] transition-all duration-200"
+                className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
               >
-                [{s}]
+                {s}
               </a>
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[10px] font-mono text-emerald-400 tracking-widest">ONLINE</span>
-          </div>
+          <a
+            href="mailto:shasrikveerlaplly21@gmail.com"
+            className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors duration-200"
+          >
+            <Mail size={14} /> Email Me
+          </a>
         </div>
       </nav>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <section className="relative z-20 max-w-7xl mx-auto px-6 pt-32 pb-24 min-h-screen flex items-center">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-28 pb-20 min-h-screen flex items-center">
         <div className="w-full grid md:grid-cols-2 gap-14 items-center">
 
           {/* Left */}
           <motion.div initial="hidden" animate="show" variants={stagger}>
-            <motion.div variants={fadeUp} className="flex items-center gap-3 mb-5">
-              <span className="w-8 h-px bg-cyan-400/60" />
-              <span className="text-[10px] font-mono text-cyan-400/80 tracking-[0.35em] uppercase">
-                Player Profile
-              </span>
-            </motion.div>
+            <motion.p variants={fadeUp} className="text-blue-400 text-sm font-medium mb-3 tracking-wide">
+              Hello, I&apos;m
+            </motion.p>
 
             <motion.h1
               variants={fadeUp}
-              className="font-display text-5xl md:text-[4.5rem] font-black leading-[1.07] tracking-tight mb-5"
+              className="text-5xl md:text-6xl font-bold leading-tight mb-4 font-display"
             >
-              Building
+              Shasrik Reddy
               <br />
-              <span className="neon-cyan">AI&#8209;Powered</span>
-              <br />
-              Web Apps.
+              <span className="text-blue-400">Veerlapally</span>
             </motion.h1>
 
-            <motion.div variants={fadeUp} className="h-9 flex items-center gap-2 mb-6">
-              <Terminal size={14} className="text-cyan-500/50 flex-shrink-0" />
-              <span className="font-mono text-gray-300 text-sm">{typed}</span>
-              <span className="w-[2px] h-5 bg-cyan-400 cursor-blink" />
+            <motion.div variants={fadeUp} className="flex items-center gap-2 mb-6 h-8">
+              <Terminal size={14} className="text-slate-500 flex-shrink-0" />
+              <span className="text-slate-300 text-sm font-mono">{typed}</span>
+              <span className="w-0.5 h-5 bg-blue-400 cursor-blink flex-shrink-0" />
             </motion.div>
 
-            <motion.p variants={fadeUp} className="text-gray-400 leading-7 text-[0.95rem] mb-8 max-w-md">
-              I build production-ready apps, AI agents, LLM integrations, scalable APIs, and modern UX using React, Next.js, Node.js, Python, and Anthropic Claude.
+            <motion.p variants={fadeUp} className="text-slate-400 leading-7 mb-8 max-w-md text-sm">
+              I build production-ready apps, AI agents, LLM integrations, scalable APIs, and modern UX
+              using React, Next.js, Node.js, Python, and Anthropic Claude.
             </motion.p>
 
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-3 mb-7">
-              <a href="#projects" className="game-btn-primary">
-                VIEW PROJECTS <ArrowUpRight size={13} />
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-3 mb-8">
+              <a
+                href="#projects"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-all duration-200"
+              >
+                View Projects <ArrowUpRight size={14} />
               </a>
-              <a href="mailto:shasrikveerlaplly21@gmail.com" className="game-btn-secondary">
-                CONTACT ME
+              <a
+                href="#contact"
+                className="px-6 py-2.5 rounded-lg border border-white/[0.15] hover:border-white/30 text-slate-300 hover:text-white text-sm font-medium transition-all duration-200"
+              >
+                Contact Me
               </a>
             </motion.div>
 
             <motion.div variants={fadeUp} className="flex gap-3">
-              <a href="https://www.linkedin.com/in/shasrik-reddy-veerlapally-a71349360/" target="_blank" className="icon-btn"><Linkedin size={17} /></a>
-              <a href="mailto:shasrikveerlaplly21@gmail.com" className="icon-btn"><Mail size={17} /></a>
-              <a href="https://github.com/Shasrikrv" target="_blank" className="icon-btn"><Github size={17} /></a>
+              <a
+                href="https://github.com/Shasrikrv"
+                target="_blank"
+                className="p-2.5 rounded-lg border border-white/[0.1] text-slate-400 hover:text-white hover:border-white/25 transition-all duration-200"
+              >
+                <Github size={18} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/shasrik-reddy-veerlapally-a71349360/"
+                target="_blank"
+                className="p-2.5 rounded-lg border border-white/[0.1] text-slate-400 hover:text-blue-400 hover:border-blue-500/30 transition-all duration-200"
+              >
+                <Linkedin size={18} />
+              </a>
+              <a
+                href="mailto:shasrikveerlaplly21@gmail.com"
+                className="p-2.5 rounded-lg border border-white/[0.1] text-slate-400 hover:text-blue-400 hover:border-blue-500/30 transition-all duration-200"
+              >
+                <Mail size={18} />
+              </a>
             </motion.div>
           </motion.div>
 
-          {/* Right — stats card */}
+          {/* Right — avatar + decorative circles + stats */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="animate-float"
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex flex-col items-center gap-8"
           >
-            <div className="game-card p-8">
-              <HUDCorners />
+            {/* Avatar with floating decorative orbs */}
+            <div className="relative flex items-center justify-center w-64 h-64">
+              {/* Decorative circles */}
+              <div className="absolute top-0 right-4 w-16 h-16 rounded-full bg-cyan-400/[0.18] blur-md animate-float" style={{ animationDelay: "0s" }} />
+              <div className="absolute bottom-2 left-2 w-14 h-14 rounded-full bg-purple-500/[0.18] blur-md animate-float" style={{ animationDelay: "1.2s" }} />
+              <div className="absolute top-1/2 right-0 w-9 h-9 rounded-full bg-emerald-400/[0.22] blur-sm animate-float" style={{ animationDelay: "2s" }} />
+              <div className="absolute top-4 left-4 w-8 h-8 rounded-full bg-orange-400/[0.18] blur-sm animate-float" style={{ animationDelay: "1.5s" }} />
+              <div className="absolute bottom-6 right-8 w-10 h-10 rounded-full bg-pink-400/[0.18] blur-sm animate-float" style={{ animationDelay: "0.6s" }} />
+              <div className="absolute -bottom-2 right-2 w-7 h-7 rounded-full bg-yellow-400/[0.2] blur-sm animate-float" style={{ animationDelay: "2.5s" }} />
 
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-[10px] font-mono text-cyan-400/70 tracking-[0.3em]">SYSTEM STATUS</span>
-                <span className="text-[10px] font-mono text-emerald-400">◉ READY</span>
+              {/* Avatar circle */}
+              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-violet-600 flex items-center justify-center relative z-10 shadow-[0_0_60px_rgba(59,130,246,0.35)]">
+                <span className="text-4xl font-bold text-white tracking-wider font-display">SRV</span>
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-3 mb-7">
-                {heroStats.map(s => (
-                  <div key={s.label} className="stat-tile">
-                    <div className="font-display text-3xl font-black neon-cyan leading-none">
-                      <Counter value={s.value} suffix={s.suffix} />
-                    </div>
-                    <div className="text-[9px] font-mono text-gray-600 tracking-widest mt-2">{s.label}</div>
+            {/* Stats grid */}
+            <div className="grid grid-cols-4 gap-3 w-full">
+              {heroStats.map((s) => (
+                <div
+                  key={s.label}
+                  className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-4 text-center hover:border-blue-500/20 transition-colors duration-200"
+                >
+                  <div className="text-2xl font-bold text-blue-400 leading-none mb-1">
+                    <Counter value={s.value} suffix={s.suffix} />
                   </div>
-                ))}
-              </div>
-
-              <div className="border-t border-white/[0.05] pt-6">
-                <p className="text-[9px] font-mono text-gray-600 tracking-widest mb-3">EQUIPPED SKILLS</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {heroSkills.map(([Icon, label]) => (
-                    <motion.div
-                      key={label}
-                      whileHover={{ scale: 1.06, borderColor: "rgba(34,211,238,0.35)" }}
-                      className="flex flex-col items-center gap-1.5 p-3 rounded-lg border border-white/[0.06] bg-white/[0.02] cursor-default"
-                    >
-                      <Icon size={15} className="text-cyan-400/70" />
-                      <span className="text-[9px] font-mono text-gray-500 text-center leading-tight">{label}</span>
-                    </motion.div>
-                  ))}
+                  <div className="text-[10px] text-slate-500 leading-tight">{s.label}</div>
                 </div>
-              </div>
+              ))}
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* ── ABOUT ────────────────────────────────────────────────────────── */}
-      <section id="about" className="relative z-20 max-w-7xl mx-auto px-6 py-20">
-        <SectionHeader index="01" title="ABOUT" />
+      <section id="about" className="relative z-10 max-w-6xl mx-auto px-6 py-24">
+        <SectionHeader
+          title="About Me"
+          subtitle="A passionate developer focused on building impactful products with modern technologies and AI."
+        />
+
         <motion.div
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: true, margin: "-60px" }}
           variants={fadeUp}
-          className="game-card p-8"
+          className="portfolio-card p-8 mb-8"
         >
-          <HUDCorners />
-          <div className="space-y-5 text-gray-400 leading-7 text-[0.95rem]">
-            <p className="flex gap-3">
-              <ChevronRight size={15} className="text-cyan-500/40 mt-0.5 flex-shrink-0" />
-              I am an AI Software Engineer and Full Stack Developer focused on building scalable, user-focused applications with modern web technologies and intelligent AI workflows. My experience spans frontend engineering, backend API development, database design, authentication, cloud deployment, and LLM-powered product development.
+          <div className="space-y-4 text-slate-400 leading-7 text-sm">
+            <p>
+              I am an AI Software Engineer and Full Stack Developer focused on building scalable, user-focused
+              applications with modern web technologies and intelligent AI workflows. My experience spans frontend
+              engineering, backend API development, database design, authentication, cloud deployment, and
+              LLM-powered product development.
             </p>
-            <p className="flex gap-3">
-              <ChevronRight size={15} className="text-cyan-500/40 mt-0.5 flex-shrink-0" />
-              I enjoy turning ideas into production-ready software by combining strong engineering fundamentals with practical AI integration using Anthropic Claude, agentic workflows, prompt engineering, and structured AI outputs.
+            <p>
+              I enjoy turning ideas into production-ready software by combining strong engineering fundamentals
+              with practical AI integration using Anthropic Claude, agentic workflows, prompt engineering, and
+              structured AI outputs.
             </p>
           </div>
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={stagger}
+          className="grid md:grid-cols-2 gap-5"
+        >
+          {aboutCards.map((card) => {
+            const { icon: Icon, title, color, items } = card;
+            const c = colorMap[color];
+            return (
+              <motion.div
+                key={title}
+                variants={fadeUp}
+                className={`portfolio-card p-6 border ${c.card}`}
+              >
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${c.icon}`}>
+                  <Icon size={18} />
+                </div>
+                <h3 className="font-semibold text-white mb-3">{title}</h3>
+                <ul className="space-y-2">
+                  {items.map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-slate-400 text-sm">
+                      <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${c.dot}`} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </section>
+
+      {/* ── SKILLS ───────────────────────────────────────────────────────── */}
+      <section id="skills" className="relative z-10 max-w-6xl mx-auto px-6 py-24">
+        <SectionHeader
+          title="Technical Skills"
+          subtitle="A modern tech stack for modern challenges — built to scale efficiently."
+        />
+
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={stagger}
+          className="space-y-4"
+        >
+          {skillCategories.map((cat) => {
+            const c = colorMap[cat.color];
+            return (
+              <motion.div key={cat.label} variants={fadeUp} className="portfolio-card p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={`w-2 h-2 rounded-full ${c.dot}`} />
+                  <span className="text-sm font-medium text-white">{cat.label}</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {cat.items.map((item) => (
+                    <motion.span
+                      key={item}
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.15 }}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border cursor-default ${c.badge}`}
+                    >
+                      {item}
+                    </motion.span>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </section>
 
       {/* ── EXPERIENCE ───────────────────────────────────────────────────── */}
-      <section id="experience" className="relative z-20 max-w-7xl mx-auto px-6 py-20">
-        <SectionHeader index="02" title="EXPERIENCE" />
-        <div className="space-y-4">
-          {experience.map((e, i) => (
-            <motion.div
-              key={e.company}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-60px" }}
-              variants={{ ...fadeUp, show: { ...fadeUp.show, transition: { duration: 0.55, delay: i * 0.08 } } }}
-            >
-              <div className="game-card p-7">
-                <HUDCorners />
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-5">
-                  <div className="flex items-start gap-4">
-                    <span className="font-display text-xl font-black text-white/[0.08] leading-none mt-0.5 select-none">
-                      {e.idx}
-                    </span>
+      <section id="experience" className="relative z-10 max-w-6xl mx-auto px-6 py-24">
+        <SectionHeader
+          title="Experience"
+          subtitle="My professional journey building products across different companies and roles."
+        />
+
+        <div className="relative">
+          {/* Vertical timeline line */}
+          <div className="absolute left-5 top-2 bottom-2 w-px bg-white/[0.07]" />
+
+          <div className="space-y-6 pl-14">
+            {experience.map((e, i) => (
+              <motion.div
+                key={e.company}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  show:   { opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.1 } },
+                }}
+                className="relative"
+              >
+                {/* Timeline dot */}
+                <div
+                  className={`absolute -left-[2.35rem] top-6 w-3 h-3 rounded-full border-2 ${
+                    e.active
+                      ? "bg-blue-500 border-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+                      : "bg-slate-700 border-slate-600"
+                  }`}
+                />
+
+                <div className="portfolio-card p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                     <div>
-                      <h3 className="font-display text-base font-bold tracking-wide text-white">{e.role}</h3>
-                      <p className="text-cyan-400/80 text-xs font-mono mt-1">{e.company} · {e.location}</p>
+                      <h3 className="font-semibold text-white text-base">{e.role}</h3>
+                      <p className="text-blue-400 text-sm mt-0.5">{e.company}</p>
+                      <div className="flex flex-wrap gap-3 mt-2">
+                        <span className="flex items-center gap-1 text-slate-500 text-xs">
+                          <MapPin size={11} /> {e.location}
+                        </span>
+                        <span className="flex items-center gap-1 text-slate-500 text-xs">
+                          <Calendar size={11} /> {e.date}
+                        </span>
+                      </div>
                     </div>
+                    {e.active && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/[0.1] text-emerald-400 border border-emerald-500/20 flex-shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Current
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0 pl-10 sm:pl-0">
-                    <span className={e.active ? "badge-active" : "badge-done"}>
-                      {e.active ? "◉ ACTIVE" : "◎ COMPLETED"}
-                    </span>
-                    <span className="text-[11px] font-mono text-gray-600">{e.date}</span>
-                  </div>
+                  <ul className="space-y-2">
+                    {e.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2 text-slate-400 text-sm leading-6">
+                        <ChevronRight size={12} className="text-blue-500/40 mt-1 flex-shrink-0" />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-2 pl-10">
-                  {e.points.map(p => (
-                    <li key={p} className="flex items-start gap-2 text-gray-500 text-sm leading-6">
-                      <ChevronRight size={13} className="text-cyan-500/30 mt-0.5 flex-shrink-0" />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── PROJECTS ─────────────────────────────────────────────────────── */}
-      <section id="projects" className="relative z-20 max-w-7xl mx-auto px-6 py-20">
-        <SectionHeader index="03" title="FEATURED PROJECTS" />
+      <section id="projects" className="relative z-10 max-w-6xl mx-auto px-6 py-24">
+        <SectionHeader
+          title="Featured Projects"
+          subtitle="A selection of my most impactful work — built with modern technologies and AI integrations."
+        />
+
         <div className="grid md:grid-cols-2 gap-6">
           {projects.map((p, i) => (
             <motion.div
-              key={p.id}
+              key={p.title}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, margin: "-60px" }}
-              variants={{ ...fadeUp, show: { ...fadeUp.show, transition: { duration: 0.55, delay: i * 0.1 } } }}
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show:   { opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.1 } },
+              }}
             >
               <motion.div
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -4 }}
                 transition={{ duration: 0.25 }}
-                className="game-card p-7 flex flex-col h-full"
+                className="portfolio-card p-7 flex flex-col h-full"
               >
-                <HUDCorners />
-
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-mono text-white/10 select-none">PROJECT_{p.id}</span>
-                  <span className="text-[10px] font-mono text-emerald-400 border border-emerald-400/20 px-2 py-0.5 rounded bg-emerald-400/[0.06]">
-                    ◉ DEPLOYED
+                {/* Window chrome */}
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex gap-1.5">
+                    <span className="w-3 h-3 rounded-full bg-red-400/60" />
+                    <span className="w-3 h-3 rounded-full bg-yellow-400/60" />
+                    <span className="w-3 h-3 rounded-full bg-green-400/60" />
+                  </div>
+                  <span className="text-xs font-medium bg-emerald-500/[0.1] text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
                   </span>
                 </div>
 
-                <h3 className="font-display text-xl font-bold tracking-wide mb-3 text-white">{p.title}</h3>
+                <h3 className="font-bold text-white text-xl mb-3">{p.title}</h3>
+                <p className="text-slate-400 text-sm leading-6 mb-4">{p.desc}</p>
 
-                {/* Power bar */}
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="text-[9px] font-mono text-gray-600 tracking-widest">PWR</span>
-                  <div className="flex-1 h-1 bg-white/[0.05] rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-cyan-300"
-                      style={{ boxShadow: "0 0 8px rgba(34,211,238,0.5)" }}
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${p.power}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1.2, ease: "easeOut" }}
-                    />
-                  </div>
-                  <span className="text-[10px] font-mono text-cyan-400">{p.power}</span>
-                </div>
-
-                <p className="text-gray-500 text-sm leading-6 mb-5">{p.desc}</p>
-
-                <ul className="space-y-1.5 mb-6 flex-1">
-                  {p.bullets.map(b => (
-                    <li key={b} className="flex items-start gap-2 text-xs text-gray-600">
-                      <ChevronRight size={11} className="text-cyan-500/30 mt-0.5 flex-shrink-0" />
+                <ul className="space-y-1.5 mb-5 flex-1">
+                  {p.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-slate-500 text-xs leading-5">
+                      <ChevronRight size={11} className="text-blue-500/40 mt-0.5 flex-shrink-0" />
                       {b}
                     </li>
                   ))}
                 </ul>
 
                 <div className="flex flex-wrap gap-1.5 mb-6">
-                  {p.stack.map(t => (
+                  {p.stack.map((t) => (
                     <span
                       key={t}
-                      className="text-[10px] font-mono text-cyan-400/60 border border-cyan-500/[0.15] px-2 py-0.5 rounded bg-cyan-500/[0.05]"
+                      className="text-xs px-2.5 py-1 rounded-md bg-blue-500/[0.08] text-blue-400 border border-blue-500/[0.15]"
                     >
                       {t}
                     </span>
                   ))}
                 </div>
 
-                <a href={p.link} target="_blank" className="game-btn-primary w-full justify-center">
-                  LAUNCH <ArrowUpRight size={13} />
-                </a>
+                <div className="flex gap-3">
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors duration-200"
+                  >
+                    <ExternalLink size={13} /> Live Demo
+                  </a>
+                  <a
+                    href={p.github}
+                    target="_blank"
+                    className="px-4 flex items-center justify-center rounded-lg border border-white/[0.1] text-slate-400 hover:text-white hover:border-white/20 transition-all duration-200"
+                  >
+                    <Github size={16} />
+                  </a>
+                </div>
               </motion.div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ── SKILLS ───────────────────────────────────────────────────────── */}
-      <section id="skills" className="relative z-20 max-w-7xl mx-auto px-6 py-20">
-        <SectionHeader index="04" title="TECHNICAL SKILLS" />
-        <div className="grid md:grid-cols-2 gap-5">
-          {skillGroups.map((g, i) => (
-            <motion.div
-              key={g.category}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-60px" }}
-              variants={{ ...fadeUp, show: { ...fadeUp.show, transition: { duration: 0.55, delay: i * 0.08 } } }}
-              className="game-card p-7"
-            >
-              <HUDCorners />
-              <div className="flex items-center gap-2 mb-5">
-                <Cpu size={13} className={g.colorText} />
-                <span className={`text-[10px] font-mono tracking-[0.25em] ${g.colorText}`}>{g.category}</span>
-              </div>
-              {g.skills.map(s => (
-                <SkillBar
-                  key={s.name}
-                  name={s.name}
-                  level={s.level}
-                  colorBar={g.colorBar}
-                  colorGlow={g.colorGlow}
-                />
-              ))}
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
       {/* ── EDUCATION ────────────────────────────────────────────────────── */}
-      <section id="education" className="relative z-20 max-w-7xl mx-auto px-6 py-20">
-        <SectionHeader index="05" title="EDUCATION" />
+      <section id="education" className="relative z-10 max-w-6xl mx-auto px-6 py-24">
+        <SectionHeader
+          title="Education"
+          subtitle="Academic foundations that underpin my technical expertise."
+        />
+
         <motion.div
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
           variants={fadeUp}
-          className="game-card p-8"
+          className="portfolio-card p-7"
         >
-          <HUDCorners />
-          <div className="flex items-start gap-4">
-            <Zap size={16} className="text-cyan-400/60 mt-1 flex-shrink-0" />
+          <div className="flex items-start gap-5">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/[0.1] text-blue-400 flex items-center justify-center flex-shrink-0">
+              <GraduationCap size={22} />
+            </div>
             <div>
-              <h3 className="font-display text-base font-bold tracking-wide text-white">
+              <h3 className="font-semibold text-white text-base">
                 Master of Science in Computer Science
               </h3>
-              <p className="text-cyan-400/70 font-mono text-xs mt-2">New York Institute of Technology</p>
+              <p className="text-blue-400 text-sm mt-1.5">New York Institute of Technology</p>
+              <div className="flex items-center gap-1.5 text-slate-500 text-xs mt-2">
+                <BookOpen size={11} /> Graduate Program
+              </div>
             </div>
           </div>
         </motion.div>
       </section>
 
       {/* ── CONTACT ──────────────────────────────────────────────────────── */}
-      <section id="contact" className="relative z-20 max-w-7xl mx-auto px-6 py-20">
-        <SectionHeader index="06" title="CONTACT" />
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          variants={fadeUp}
-          className="game-card p-8"
-        >
-          <HUDCorners />
-          <p className="text-[11px] font-mono text-gray-600 mb-6 tracking-wider">
-            &gt; Open to AI Software Engineer, Full Stack Developer, and Software Engineer roles.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <a href="mailto:shasrikveerlaplly21@gmail.com" className="game-btn-primary">
-              <Mail size={13} /> EMAIL ME
-            </a>
-            <a href="https://www.linkedin.com/in/shasrik-reddy-veerlapally-a71349360/" target="_blank" className="game-btn-secondary">
-              <Linkedin size={13} /> LINKEDIN
-            </a>
-            <a href="https://ai-shopping-agent-iota.vercel.app/login" target="_blank" className="game-btn-secondary">
-              <Zap size={13} /> AI SHOPPING AGENT
-            </a>
-            <a href="https://foodiehub-eight-snowy.vercel.app/" target="_blank" className="game-btn-secondary">
-              <Globe size={13} /> FOODIEHUB
-            </a>
-          </div>
-        </motion.div>
+      <section id="contact" className="relative z-10 max-w-6xl mx-auto px-6 py-24">
+        <SectionHeader
+          title="Let's Collaborate"
+          subtitle="Open to AI Software Engineer, Full Stack Developer, and Software Engineer roles."
+        />
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Left — contact info */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            className="portfolio-card p-8 flex flex-col gap-6"
+          >
+            <div>
+              <h3 className="font-semibold text-white text-lg mb-2">Let&apos;s Connect</h3>
+              <p className="text-slate-400 text-sm leading-6">
+                I&apos;m currently open to new opportunities and would love to hear about your project or role.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <a
+                href="mailto:shasrikveerlaplly21@gmail.com"
+                className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.07] hover:border-blue-500/30 hover:bg-blue-500/[0.04] transition-all duration-200 group"
+              >
+                <div className="w-9 h-9 rounded-lg bg-blue-500/[0.1] text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/[0.15]">
+                  <Mail size={16} />
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">Email</p>
+                  <p className="text-white text-sm">shasrikveerlaplly21@gmail.com</p>
+                </div>
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/shasrik-reddy-veerlapally-a71349360/"
+                target="_blank"
+                className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.07] hover:border-blue-500/30 hover:bg-blue-500/[0.04] transition-all duration-200 group"
+              >
+                <div className="w-9 h-9 rounded-lg bg-blue-500/[0.1] text-blue-400 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/[0.15]">
+                  <Linkedin size={16} />
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">LinkedIn</p>
+                  <p className="text-white text-sm">Shasrik Reddy Veerlapally</p>
+                </div>
+              </a>
+
+              <a
+                href="https://github.com/Shasrikrv"
+                target="_blank"
+                className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.07] hover:border-white/[0.15] hover:bg-white/[0.03] transition-all duration-200 group"
+              >
+                <div className="w-9 h-9 rounded-lg bg-white/[0.05] text-slate-400 flex items-center justify-center flex-shrink-0 group-hover:bg-white/[0.08]">
+                  <Github size={16} />
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-0.5">GitHub</p>
+                  <p className="text-white text-sm">github.com/Shasrikrv</p>
+                </div>
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Right — contact form */}
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              show:   { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1 } },
+            }}
+            className="portfolio-card p-8"
+          >
+            <h3 className="font-semibold text-white text-lg mb-6">Send a Message</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                window.location.href = "mailto:shasrikveerlaplly21@gmail.com";
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-xs text-slate-400 mb-1.5">Name</label>
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 text-sm focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/[0.04] transition-all duration-200"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-400 mb-1.5">Email</label>
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 text-sm focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/[0.04] transition-all duration-200"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-400 mb-1.5">Message</label>
+                <textarea
+                  rows={4}
+                  placeholder="Tell me about your project or opportunity..."
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white placeholder-slate-600 text-sm focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/[0.04] transition-all duration-200 resize-none"
+                />
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors duration-200"
+              >
+                <Send size={14} /> Send Message
+              </motion.button>
+            </form>
+          </motion.div>
+        </div>
       </section>
 
-      <footer className="relative z-20 py-8 text-center border-t border-white/[0.05]">
-        <span className="text-[10px] font-mono text-white/[0.12] tracking-[0.25em]">
-          &lt; DESIGNED &amp; DEVELOPED BY SHASRIK REDDY VEERLAPALLY /&gt;
-        </span>
+      <footer className="relative z-10 py-8 text-center border-t border-white/[0.05]">
+        <p className="text-slate-600 text-xs">
+          Designed &amp; Developed by{" "}
+          <span className="text-slate-400">Shasrik Reddy Veerlapally</span>
+        </p>
       </footer>
     </main>
   );

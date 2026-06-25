@@ -6,22 +6,17 @@ const config: Config = {
     extend: {
       fontFamily: {
         display: ["var(--font-orbitron)", "monospace"],
-        sans: ["var(--font-space)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "Menlo", "monospace"],
-      },
-      colors: {
-        "game-bg": "#020409",
-        "game-card": "#080d1a",
+        sans:    ["var(--font-space)", "system-ui", "sans-serif"],
+        mono:    ["var(--font-mono)", "Menlo", "monospace"],
       },
       boxShadow: {
-        "glow-cyan": "0 0 25px rgba(34,211,238,0.25), 0 0 60px rgba(34,211,238,0.1)",
-        "glow-purple": "0 0 25px rgba(167,139,250,0.25)",
-        "glow-btn": "0 0 20px rgba(34,211,238,0.2)",
+        "glow-blue":   "0 0 25px rgba(59,130,246,0.3), 0 0 60px rgba(59,130,246,0.1)",
+        "glow-violet": "0 0 25px rgba(139,92,246,0.25)",
       },
       keyframes: {
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-10px)" },
+          "50%":      { transform: "translateY(-10px)" },
         },
       },
       animation: {

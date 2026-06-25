@@ -5,60 +5,9 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background: #020409;
+  background: #070d1e;
   color: #cbd5e1;
   font-family: var(--font-space), system-ui, sans-serif;
-}
-
-/* ── Background ─────────────────────────────────────────────────── */
-.grid-bg {
-  background-image: radial-gradient(rgba(34, 211, 238, 0.055) 1px, transparent 1px);
-  background-size: 44px 44px;
-}
-
-.scanlines::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(0, 0, 0, 0.035) 3px,
-    rgba(0, 0, 0, 0.035) 4px
-  );
-  pointer-events: none;
-  z-index: 999;
-}
-
-/* ── HUD corner brackets ─────────────────────────────────────────── */
-.hud-corner {
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  border-style: solid;
-  border-color: rgba(34, 211, 238, 0.4);
-  transition: border-color 0.2s;
-}
-.hud-corner.tl { top: 0;  left: 0;  border-width: 1.5px 0 0 1.5px; }
-.hud-corner.tr { top: 0;  right: 0; border-width: 1.5px 1.5px 0 0; }
-.hud-corner.bl { bottom: 0; left: 0;  border-width: 0 0 1.5px 1.5px; }
-.hud-corner.br { bottom: 0; right: 0; border-width: 0 1.5px 1.5px 0; }
-
-/* ── Neon text ───────────────────────────────────────────────────── */
-.neon-cyan {
-  color: #22d3ee;
-  text-shadow: 0 0 20px rgba(34,211,238,0.45), 0 0 50px rgba(34,211,238,0.18);
-}
-.neon-purple {
-  color: #a78bfa;
-  text-shadow: 0 0 20px rgba(167,139,250,0.45);
-}
-.gradient-text {
-  background: linear-gradient(90deg, #22d3ee, #818cf8, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 /* ── Cursor blink ────────────────────────────────────────────────── */
@@ -68,60 +17,14 @@ body {
 }
 .cursor-blink { animation: blink 1s step-end infinite; }
 
-/* ── Glitch hover ────────────────────────────────────────────────── */
-@keyframes glitch {
-  0%  { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 0); }
-  25% { clip-path: inset(50% 0 20% 0); transform: translate(3px, 0);  }
-  50% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 0); }
-  75% { clip-path: inset(70% 0 5%  0); transform: translate(2px, 0);  }
-  100%{ clip-path: inset(30% 0 50% 0); transform: translate(0, 0);    }
-}
-
+/* ── Components ──────────────────────────────────────────────────── */
 @layer components {
-  /* Cards */
-  .game-card {
-    @apply relative bg-[#080d1a]/80 border border-white/[0.07] rounded-xl backdrop-blur-sm overflow-hidden;
+  .portfolio-card {
+    @apply relative bg-white/[0.03] border border-white/[0.07] rounded-xl backdrop-blur-sm;
     transition: border-color 0.25s, box-shadow 0.25s;
   }
-  .game-card:hover {
-    border-color: rgba(34,211,238,0.18);
-    box-shadow: 0 0 40px rgba(34,211,238,0.07);
-  }
-
-  /* Buttons */
-  .game-btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded text-xs font-mono font-bold tracking-widest
-           text-cyan-400 border border-cyan-500/30 bg-cyan-500/[0.08]
-           hover:border-cyan-400/60 hover:bg-cyan-500/[0.15] hover:text-cyan-300
-           transition-all duration-200;
-  }
-  .game-btn-primary:hover {
-    box-shadow: 0 0 20px rgba(34,211,238,0.18);
-  }
-
-  .game-btn-secondary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded text-xs font-mono font-bold tracking-widest
-           text-gray-400 border border-white/[0.1] bg-white/[0.03]
-           hover:border-white/20 hover:text-gray-200 hover:bg-white/[0.07]
-           transition-all duration-200;
-  }
-
-  .icon-btn {
-    @apply p-2.5 rounded border border-white/[0.08] text-gray-500
-           hover:text-cyan-400 hover:border-cyan-500/30 hover:bg-cyan-500/[0.06]
-           transition-all duration-200;
-  }
-
-  /* Status badges */
-  .badge-active {
-    @apply text-xs font-mono px-2 py-0.5 rounded border text-emerald-400 border-emerald-400/25 bg-emerald-400/[0.07];
-  }
-  .badge-done {
-    @apply text-xs font-mono px-2 py-0.5 rounded border text-gray-500 border-white/10 bg-white/[0.03];
-  }
-
-  /* Stat tile */
-  .stat-tile {
-    @apply bg-white/[0.03] border border-white/[0.06] rounded-lg p-4;
+  .portfolio-card:hover {
+    border-color: rgba(59, 130, 246, 0.18);
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.06);
   }
 }
